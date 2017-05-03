@@ -2,7 +2,8 @@
     let currentRootUrl,
         currentUrlAsArray,
         urlsObject,
-        urlsArray;
+        urlsArray,
+        root;
 
     //
     // chrome.storage.sync.clear();
@@ -14,16 +15,16 @@
         let saveButton = document.getElementById('save-button');
         let treeBlock = document.getElementById('tree');
 
-        let root = createRootDiv(treeBlock);
+        root = createRootDiv(treeBlock);
 
         if (urlsObject.urls) {
             urlsArray = urlsObject.urls;
         } else {
             urlsArray = [];
         }
-        prepareTree(root);
+        prepareTree();
         saveButton.onclick = function () {
-            parseUrl(root);
+            parseUrl();
         };
 
         //query for getting url of current active tab
@@ -35,45 +36,34 @@
     };
 
 
-    function prepareTree(root) {
+    let throughUrls = function (urlPart, i, arr) {
+        let fullUrl = arr.slice(0, i + 1).reduce(function (prev, curr, i) {
+            return prev + '/' + curr;
+        });
+        let nodeElement = createNode().init().setURLValue(fullUrl, urlPart);
+        if (!i) {
+            root.addChild(nodeElement);
+        } else {
+            root.getChildren[root.getChildren.length - 1].addChild(nodeElement);
+        }
+    };
+
+
+    function prepareTree() {
         if (urlsArray) {
             urlsArray.forEach(function (url) {
-                let last,
-                    fullUrl;
-                url.split('/').forEach(function (urlPart, i) {
-                    fullUrl = fullUrl ? fullUrl + '/' + urlPart : urlPart;
-                    let nodeElement = createNode().init().setURLValue(fullUrl, urlPart);
-                    if (!last) {
-                        root.addChild(nodeElement);
-                    } else {
-                        last.addChild(nodeElement);
-                    }
-                    last = nodeElement;
-                });
+                url.split('/').forEach(throughUrls);
             });
         }
     }
 
-
-    function parseUrl(root) {
-        let last,
-            fullUrl;
-        currentUrlAsArray.forEach(function (urlPart, i) {
-            fullUrl = fullUrl ? fullUrl + '/' + urlPart : urlPart;
-            let nodeElement = createNode().init().setURLValue(fullUrl, urlPart);
-            if (!last) {
-                root.addChild(nodeElement);
-            } else {
-                last.addChild(nodeElement);
-            }
-            last = nodeElement;
-        });
+    function parseUrl() {
+        currentUrlAsArray.forEach(throughUrls);
         urlsArray.push(fullUrl);
         //maybe move to unload
         chrome.storage.sync.set({"urls": urlsArray});
         //
     }
-
 
 //Node for tree
     function createNode() {
@@ -140,9 +130,6 @@
 
         return node;
     }
-
-
-
 
 
     function createRootDiv(baseElement) {
