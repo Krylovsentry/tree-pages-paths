@@ -5,12 +5,13 @@
         urlsArray,
         root,
         addingPoint;
-    //
+
     // chrome.storage.sync.clear();
     chrome.storage.sync.get("urls", function (urls) {
         urlsObject = urls;
     });
 
+    //On load logic for popup
     window.onload = function () {
         let saveButton = document.getElementById('save-button');
         let treeBlock = document.getElementById('tree');
@@ -23,7 +24,11 @@
         } else {
             urlsArray = [];
         }
+
+        //prepare tree with previously saved urls
         prepareTree();
+
+        //register on click for save button
         saveButton.onclick = function () {
             parseUrl();
         };
@@ -36,44 +41,46 @@
         });
     };
 
-    //GOD, EXCUSE ME FOR THIS
-    let throughUrls = function (urlPart, i, arr) {
+    let throughUrl = function (urlPart, i, arr) {
         let fullUrl = arr.slice(0, i + 1).reduce(function (prev, curr, i) {
             return prev + '/' + curr;
         });
         let nodeElement = createNode();
         nodeElement.setURLValue(fullUrl, urlPart);
-        let isAdding = true;
+        let isAdded = false;
 
-        addingPoint.getChildren.forEach(function (child) {
-            if (child.getUrl() === fullUrl) {
-                addingPoint = child;
-                isAdding = false;
-            }
-        });
+        if (addingPoint.getChildren.length) {
+            addingPoint.getChildren.forEach(function (child, j, childArray) {
+                if (!isAdded) {
+                    if (child.getUrl() === urlPart) {
+                        addingPoint = child;
+                    } else if (j + 1 == childArray.length) {
+                        addingPoint.addChild(nodeElement);
+                        addingPoint = nodeElement;
+                        isAdded = true;
+                    }
+                }
+            });
+        } else {
+            addingPoint.addChild(nodeElement);
+            addingPoint = nodeElement;
+        }
 
-        if (isAdding) {
-            if (!i) {
-                addingPoint.addChild(nodeElement);
-                addingPoint = root;
-            } else {
-                addingPoint.getChildren[addingPoint.getChildren.length - 1].addChild(nodeElement);
-                addingPoint = root;
-            }
+        if (i + 1 == arr.length) {
+            addingPoint = root;
         }
     };
 
     function prepareTree() {
         if (urlsArray) {
             urlsArray.forEach(function (url) {
-                url.split('/').forEach(throughUrls);
+                url.split('/').forEach(throughUrl);
             });
         }
     }
 
     function parseUrl() {
-        currentUrlAsArray.forEach(throughUrls);
-        urlsArray.push(fullUrl);
+        currentUrlAsArray.forEach(throughUrl);
         //maybe move to unload
         chrome.storage.sync.set({"urls": urlsArray});
         //
@@ -85,6 +92,7 @@
             expandElement,
             contentElement,
             url,
+            fullOwnUrl,
             children;
 
         containerElement = document.createElement('ul');
@@ -100,7 +108,7 @@
 
         //register on click for content element
         contentElement.onclick = function () {
-            chrome.tabs.create({url: currentRootUrl + '/' + url});
+            chrome.tabs.create({url: currentRootUrl + '/' + fullOwnUrl});
         };
 
         containerElement.appendChild(nodeElement);
@@ -118,7 +126,8 @@
             },
             getChildren: children,
             setURLValue: function (fullUrl, urlValue) {
-                url = fullUrl;
+                url = urlValue;
+                fullOwnUrl = fullUrl;
                 contentElement.innerHTML = urlValue;
             }
         }
@@ -126,6 +135,7 @@
     }
 
 
+    //Can be rewrite with proto inheritance
     function createRootDiv(baseElement) {
         let rootElement,
             children;
@@ -134,7 +144,7 @@
         children = [];
 
         return {
-            rootElement: rootElement,
+            getElement: rootElement,
             getChildren: children,
             addChild: function (child) {
                 rootElement.appendChild(child.getElement);
