@@ -6,38 +6,37 @@
         root,
         addingPoint;
 
-    // chrome.storage.sync.clear();
-    chrome.storage.sync.get("urls", function (urls) {
-        urlsObject = urls;
-    });
-
     //On load logic for popup
     window.onload = function () {
-        let saveButton = document.getElementById('save-button');
-        let treeBlock = document.getElementById('tree');
+        // chrome.storage.sync.clear();
+        chrome.storage.sync.get("urls", function (urls) {
+            urlsObject = urls;
+            let saveButton = document.getElementById('save-button');
+            let treeBlock = document.getElementById('tree');
 
-        root = createRootDiv(treeBlock);
-        addingPoint = root;
+            root = createRootDiv(treeBlock);
+            addingPoint = root;
 
-        if (urlsObject.urls) {
-            urlsArray = urlsObject.urls;
-        } else {
-            urlsArray = [];
-        }
+            if (urlsObject.urls) {
+                urlsArray = urlsObject.urls;
+            } else {
+                urlsArray = [];
+            }
 
-        //prepare tree with previously saved urls
-        prepareTree();
+            //prepare tree with previously saved urls
+            prepareTree();
 
-        //register on click for save button
-        saveButton.onclick = function () {
-            parseUrl();
-        };
+            //register on click for save button
+            saveButton.onclick = function () {
+                parseUrl();
+            };
 
-        //query for getting url of current active tab
-        chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-            currentUrlAsArray = tabs[0].url.split('/');
-            currentRootUrl = currentUrlAsArray.slice(0, 3).join('/');
-            currentUrlAsArray = currentUrlAsArray.slice(3, currentUrlAsArray.length + 1);
+            //query for getting url of current active tab
+            chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+                currentUrlAsArray = tabs[0].url.split('/');
+                currentRootUrl = currentUrlAsArray.slice(0, 3).join('/');
+                currentUrlAsArray = currentUrlAsArray.slice(3, currentUrlAsArray.length + 1);
+            });
         });
     };
 
@@ -82,6 +81,7 @@
     function parseUrl() {
         currentUrlAsArray.forEach(throughUrl);
         //maybe move to unload
+        urlsArray.push(currentUrlAsArray.join('/'));
         chrome.storage.sync.set({"urls": urlsArray});
         //
     }
