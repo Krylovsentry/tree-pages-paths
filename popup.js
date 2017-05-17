@@ -89,20 +89,26 @@
     function createNode() {
         let containerElement,
             nodeElement,
+            nodeElementsBlock,
             expandElement,
             contentElement,
+            removeElement,
             url,
             fullOwnUrl,
             children;
 
         containerElement = document.createElement('ul');
-        containerElement.className = 'container-element';
+        containerElement.className = 'container';
         nodeElement = document.createElement('li');
-        nodeElement.className = 'node-element';
+        nodeElement.className = 'node';
+        nodeElementsBlock = document.createElement('div');
+        nodeElementsBlock.className = 'node node-elements';
         expandElement = document.createElement('div');
-        expandElement.className = 'expand-element';
+        expandElement.className = 'expand';
         contentElement = document.createElement('div');
-        contentElement.className = 'content-element';
+        contentElement.className = 'content';
+        removeElement = document.createElement('button');
+        removeElement.className = 'remove';
 
         children = [];
 
@@ -111,9 +117,14 @@
             chrome.tabs.create({url: currentRootUrl + '/' + fullOwnUrl});
         };
 
+        removeElement.onclick = function () {
+        };
+
+        nodeElementsBlock.appendChild(expandElement);
+        nodeElementsBlock.appendChild(contentElement);
+        nodeElementsBlock.appendChild(removeElement);
+        nodeElement.appendChild(nodeElementsBlock);
         containerElement.appendChild(nodeElement);
-        nodeElement.appendChild(expandElement);
-        nodeElement.appendChild(contentElement);
 
         return {
             getElement: containerElement,

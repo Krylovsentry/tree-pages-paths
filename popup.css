@@ -8,3 +8,7 @@
     text-align: center;
 }
 
+
+.node .node-elements{
+    display: inline-flex;
+}
