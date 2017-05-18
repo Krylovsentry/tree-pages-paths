@@ -21,9 +21,6 @@
     "http://*/*",
     "storage"
   ],
-  "background": {
-    "page": "background.html"
-  },
   "browser_action": {
     "default_title": "Tree Page Paths",
     "default_icon": "images/tree-128.png",
