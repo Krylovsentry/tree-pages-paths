@@ -59,6 +59,7 @@
                 if (!isAdded) {
                     if (child.getUrl() === urlPart) {
                         addingPoint = child;
+                        isAdded = true;
                     } else if (j + 1 === childArray.length) {
                         addingPoint.addChild(nodeElement);
                         addingPoint = nodeElement;
