@@ -41,11 +41,17 @@
     };
 
     let throughUrl = function (urlPart, i, arr) {
+        //get full url from array of url pary
         let fullUrl = arr.slice(0, i + 1).reduce(function (prev, curr, i) {
             return prev + '/' + curr;
         });
-        let nodeElement = createNode();
+        let isRoot = !i ? true : false;
+        let nodeElement = createNode(isRoot);
         nodeElement.setURLValue(fullUrl, urlPart);
+        if (!~urlsArray.indexOf(fullUrl)) {
+            urlsArray.push(fullUrl);
+        }
+
         let isAdded = false;
 
         if (addingPoint.getChildren.length) {
@@ -80,27 +86,24 @@
 
     function parseUrl() {
         currentUrlAsArray.forEach(throughUrl);
-        //maybe move to unload
-        urlsArray.push(currentUrlAsArray.join('/'));
         chrome.storage.sync.set({"urls": urlsArray});
-        //
     }
 
-    function createNode() {
+    function createNode(isRoot) {
         let containerElement,
             nodeElement,
             nodeElementsBlock,
             expandElement,
             contentElement,
             removeElement,
-            url,
+            ownUrl,
             fullOwnUrl,
             children;
 
         containerElement = document.createElement('ul');
         containerElement.className = 'container';
         nodeElement = document.createElement('li');
-        nodeElement.className = 'node';
+        nodeElement.className = 'node' + (isRoot ? ' isRoot' : '');
         nodeElementsBlock = document.createElement('div');
         nodeElementsBlock.className = 'node node-elements';
         expandElement = document.createElement('div');
@@ -108,7 +111,7 @@
         contentElement = document.createElement('div');
         contentElement.className = 'content';
         removeElement = document.createElement('button');
-        removeElement.className = 'remove';
+        removeElement.className = 'button-remove';
 
         children = [];
 
@@ -118,6 +121,12 @@
         };
 
         removeElement.onclick = function () {
+            // urlsArray.splice(urlsArray.indexOf(fullOwnUrl), 1);
+            urlsArray = urlsArray.filter(function (url) {
+                return !url.includes(ownUrl);
+            });
+            chrome.storage.sync.set({"urls": urlsArray});
+            containerElement.parentNode.removeChild(containerElement);
         };
 
         nodeElementsBlock.appendChild(expandElement);
@@ -133,11 +142,11 @@
                 children.push(child);
             },
             getUrl: function () {
-                return url;
+                return ownUrl;
             },
             getChildren: children,
             setURLValue: function (fullUrl, urlValue) {
-                url = urlValue;
+                ownUrl = urlValue;
                 fullOwnUrl = fullUrl;
                 contentElement.innerHTML = urlValue;
             }

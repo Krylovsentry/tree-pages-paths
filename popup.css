@@ -1,14 +1,46 @@
-.button-save{
-    height: 40px;
-    border-radius: 20px;
-    background: none;
+
+li {
+    list-style-type: none;
 }
 
-.button-save-text{
-    text-align: center;
+.content-block {
+    display: inline-flex;
 }
 
+.container {
+    padding: 0;
+    margin-left: 18px;
+}
 
-.node .node-elements{
+/*styles for buttons*/
+.button-save {
+    position: relative;
+    padding: 10px 40px;
+    margin: 0 10px 10px 0;
+    float: left;
+    border-radius: 10px;
+    font-family: 'Pacifico', cursive;
+    font-size: 15px;
+    color: #FFF;
+    text-decoration: none;
+    /*color properties*/
+    background-color: #82BF56;
+    border-bottom: 5px solid #669644;
+    text-shadow: 0 -2px #669644;
+}
+
+.button-save:active {
+    transform: translate(0px, 5px);
+    -webkit-transform: translate(0px, 5px);
+    border-bottom: 1px solid;
+}
+
+.button-remove {
+    margin-left: 15px;
+}
+
+/*end of styles for buttons*/
+
+.node .node-elements {
     display: inline-flex;
 }
