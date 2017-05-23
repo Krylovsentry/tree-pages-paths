@@ -5,6 +5,7 @@ li {
 
 .content-block {
     display: inline-flex;
+    min-height: 100px;
 }
 
 .container {
@@ -12,9 +13,20 @@ li {
     margin-left: 18px;
 }
 
+
+.tree-block{
+    float: right;
+}
+
 /*styles for buttons*/
+.button-block{
+    width: 150px;
+    float: left;
+}
+
 .button-save {
-    position: relative;
+    position: fixed;
+    top: 50%;
     padding: 10px 40px;
     margin: 0 10px 10px 0;
     float: left;
@@ -39,6 +51,14 @@ li {
     margin-left: 15px;
 }
 
+.button-remove__image{
+    width: 15px;
+    height: 15px;
+}
+
+.button-remove__image:active{
+    content: url("images/error-icon-active.png");
+}
 /*end of styles for buttons*/
 
 .node .node-elements {

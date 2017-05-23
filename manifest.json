@@ -5,16 +5,6 @@
   "description": "Simple tree for fast navigating by paths from root path.",
   "author": "Anton Krylov, https://github.com/Krylovsentry",
   "short_name": "Treepp",
-  "content_scripts": [
-    {
-      "matches": [
-        "*://*/*"
-      ],
-      "js": [
-        "content.js"
-      ]
-    }
-  ],
   "permissions": [
     "tabs",
     "https://*/*",

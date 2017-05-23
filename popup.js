@@ -41,11 +41,11 @@
     };
 
     let throughUrl = function (urlPart, i, arr) {
-        //get full url from array of url pary
+        //get full url from array of url part
         let fullUrl = arr.slice(0, i + 1).reduce(function (prev, curr, i) {
             return prev + '/' + curr;
         });
-        let isRoot = !i ? true : false;
+        let isRoot = !i;
         let nodeElement = createNode(isRoot);
         nodeElement.setURLValue(fullUrl, urlPart);
         if (!~urlsArray.indexOf(fullUrl)) {
@@ -59,7 +59,7 @@
                 if (!isAdded) {
                     if (child.getUrl() === urlPart) {
                         addingPoint = child;
-                    } else if (j + 1 == childArray.length) {
+                    } else if (j + 1 === childArray.length) {
                         addingPoint.addChild(nodeElement);
                         addingPoint = nodeElement;
                         isAdded = true;
@@ -71,7 +71,7 @@
             addingPoint = nodeElement;
         }
 
-        if (i + 1 == arr.length) {
+        if (i + 1 === arr.length) {
             addingPoint = root;
         }
     };
@@ -79,12 +79,19 @@
     function prepareTree() {
         if (urlsArray) {
             urlsArray.forEach(function (url) {
-                url.split('/').forEach(throughUrl);
+                let localArr = url.split('/');
+                localArr = localArr.filter(function (urlPart) {
+                    return urlPart;
+                });
+                localArr.forEach(throughUrl);
             });
         }
     }
 
     function parseUrl() {
+        currentUrlAsArray = currentUrlAsArray.filter(function (urlPart) {
+            return urlPart;
+        });
         currentUrlAsArray.forEach(throughUrl);
         chrome.storage.sync.set({"urls": urlsArray});
     }
@@ -110,9 +117,9 @@
         expandElement.className = 'expand';
         contentElement = document.createElement('div');
         contentElement.className = 'content';
-        removeElement = document.createElement('button');
+        removeElement = document.createElement('div');
         removeElement.className = 'button-remove';
-
+        removeElement.innerHTML = '<img class="button-remove__image" src="images/error-icon.png">';
         children = [];
 
         //register on click for content element
