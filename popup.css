@@ -13,52 +13,65 @@ li {
     margin-left: 18px;
 }
 
+.content {
+    transition: all .2s ease;
+}
 
-.tree-block{
+.content:hover {
+    transform: scale(1.1);
+}
+
+.tree-block {
     float: right;
 }
 
 /*styles for buttons*/
-.button-block{
+.button-block {
     width: 150px;
     float: left;
 }
 
-.button-save {
-    position: fixed;
-    top: 50%;
-    padding: 10px 40px;
-    margin: 0 10px 10px 0;
-    float: left;
-    border-radius: 10px;
-    font-family: 'Pacifico', cursive;
-    font-size: 15px;
-    color: #FFF;
-    text-decoration: none;
-    /*color properties*/
-    background-color: #82BF56;
-    border-bottom: 5px solid #669644;
-    text-shadow: 0 -2px #669644;
+.button {
+    transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0.2s;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
 }
 
 .button-save:active {
-    transform: translate(0px, 5px);
-    -webkit-transform: translate(0px, 5px);
-    border-bottom: 1px solid;
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+    transition-delay: 0s;
+}
+
+.button-save {
+    text-align: center;
+    display: inline-block;
+    top: 50%;
+    position: fixed;
+    width: 120px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 2px;
+    font-size: 0.9em;
+    transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0.2s;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    background-color: #0f9d58;
+    color: #fff;
 }
 
 .button-remove {
     margin-left: 15px;
 }
 
-.button-remove__image{
+.button-remove__image {
     width: 15px;
     height: 15px;
 }
 
-.button-remove__image:active{
-    content: url("images/error-icon-active.png");
+.button-remove__image:hover {
+    content: url("images/error-icon-hover.png");
 }
+
 /*end of styles for buttons*/
 
 .node .node-elements {
