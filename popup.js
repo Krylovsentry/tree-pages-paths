@@ -131,7 +131,9 @@
         removeElement.onclick = function () {
             // urlsArray.splice(urlsArray.indexOf(fullOwnUrl), 1);
             urlsArray = urlsArray.filter(function (url) {
-                return !url.includes(ownUrl);
+                return !url.split('/').some(function (partOfUrl) {
+                   return partOfUrl === ownUrl;
+                });
             });
             chrome.storage.sync.set({"urls": urlsArray});
             containerElement.parentNode.removeChild(containerElement);
